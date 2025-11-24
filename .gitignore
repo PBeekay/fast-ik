@@ -38,6 +38,16 @@ lerna-debug.log*
 .env.production
 .env.development
 
+# Database
+*.db
+*.sqlite
+*.sqlite3
+backend/alembic/versions/
+
+# Documentation (optional - documentation files)
+*.md
+!README.md
+
 # OS
 .DS_Store
 Thumbs.db

@@ -4,3 +4,12 @@ pydantic==2.10.3
 pydantic-settings==2.6.1
 email-validator==2.2.0
 
+# Database
+sqlalchemy==2.0.35
+alembic==1.14.0
+pymysql==1.1.1  # MariaDB/MySQL driver
+cryptography==43.0.3  # For MySQL
+
+# Password hashing (gelecek için)
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0

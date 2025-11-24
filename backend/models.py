@@ -149,26 +149,52 @@ class LeaveCreateRequest(BaseModel):
 
 class ExpenseRequest(BaseModel):
     """
-    Masraf talebi modeli (ileriki geliştirmeler için)
+    Masraf talebi modeli
     """
+    id: Optional[int] = None
     employee_id: int
-    expense_type: str = Field(..., description="Masraf türü: Yol, Yemek, Konaklama vb.")
-    amount: float = Field(..., ge=0, description="Masraf tutarı")
-    date: str
-    description: str
+    employee_name: str
+    expense_type: str = Field(..., description="Masraf türü: Yol, Yemek, Konaklama, Diğer")
+    amount: float = Field(..., ge=0, description="Masraf tutarı (TL)")
+    date: str = Field(..., description="Masraf tarihi (YYYY-MM-DD)")
+    description: str = Field(..., description="Masraf açıklaması", min_length=5)
     receipt_url: Optional[str] = None
     status: str = Field(default="Bekliyor", description="Durum: Bekliyor, Onaylandı, Reddedildi")
+    created_at: Optional[str] = None
     
     class Config:
         json_schema_extra = {
             "example": {
+                "id": 1,
                 "employee_id": 1,
+                "employee_name": "Ahmet Yılmaz",
                 "expense_type": "Yol",
-                "amount": 250.50,
-                "date": "2024-05-20",
-                "description": "Müşteri ziyareti - İstanbul",
-                "receipt_url": "https://example.com/receipt.pdf",
-                "status": "Bekliyor"
+                "amount": 450.00,
+                "date": "2025-11-20",
+                "description": "İstanbul - Ankara müşteri ziyareti",
+                "receipt_url": None,
+                "status": "Bekliyor",
+                "created_at": "2025-11-20"
+            }
+        }
+
+
+class ExpenseCreateRequest(BaseModel):
+    """
+    Masraf talebi oluşturma request modeli
+    """
+    expense_type: str
+    amount: float = Field(..., ge=0)
+    date: str
+    description: str
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "expense_type": "Yol",
+                "amount": 450.00,
+                "date": "2025-11-20",
+                "description": "İstanbul - Ankara müşteri ziyareti"
             }
         }
 

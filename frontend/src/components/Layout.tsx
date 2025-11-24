@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 interface LayoutProps {
   children: ReactNode
@@ -7,7 +8,8 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const location = useLocation()
-  const [userName] = useState('Berkay')
+  const { user, logout } = useAuth()
+  const [showUserMenu, setShowUserMenu] = useState(false)
   
   const navigation = [
     { name: 'Ana Sayfa', path: '/' },
@@ -57,14 +59,42 @@ const Layout = ({ children }: LayoutProps) => {
                 </svg>
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
-              <div className="flex items-center space-x-3 pl-3 border-l border-gray-200">
+              <div className="relative flex items-center space-x-3 pl-3 border-l border-gray-200">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">{userName}</p>
-                  <p className="text-xs text-gray-500">İK Yöneticisi</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.name || 'Kullanıcı'}</p>
+                  <p className="text-xs text-gray-500 capitalize">{user?.role === 'admin' ? 'Yönetici' : user?.role === 'manager' ? 'Müdür' : 'Çalışan'}</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
-                  {userName.charAt(0)}
-                </div>
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold hover:bg-indigo-700 transition-colors"
+                >
+                  {user?.name?.charAt(0) || 'U'}
+                </button>
+
+                {/* Dropdown Menu */}
+                {showUserMenu && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setShowUserMenu(false)}
+                    ></div>
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                      </div>
+                      <button
+                        onClick={logout}
+                        className="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50 transition-colors flex items-center space-x-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Çıkış Yap</span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
